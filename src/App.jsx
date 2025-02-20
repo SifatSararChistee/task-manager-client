@@ -55,7 +55,7 @@ export default function TaskManager() {
         }
       })
       .catch((error) => {
-        console.error("Error adding post:", error);
+        console.error("Error adding task:", error);
       });
 
     // Clear form & close modal
