@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "./Context/AuthContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import TaskColumn from "./Components/TaskColumn";
+import UseTasks from "./Hooks/UseTasks";
 
 export default function TaskManager() {
   const { user } = useContext(AuthContext);
@@ -10,22 +11,24 @@ export default function TaskManager() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("To-Do");
-  const [tasks, setTasks] = useState([]);
+  // const [tasks, setTasks] = useState([]);
+  const [tasks, refetch]= UseTasks()
 
-  useEffect(() => {
-    if (!user?.email) return;
 
-    const fetchTasks = async () => {
-      try {
-        const { data } = await axios.get(`http://localhost:5000/tasks/${user.email}`);
-        setTasks(data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
+  // useEffect(() => {
+  //   if (!user?.email) return;
 
-    fetchTasks();
-  }, [user?.email]);
+  //   const fetchTasks = async () => {
+  //     try {
+  //       const { data } = await axios.get(`http://localhost:5000/tasks/${user.email}`);
+  //       setTasks(data);
+  //     } catch (error) {
+  //       console.error("Error fetching tasks:", error);
+  //     }
+  //   };
+
+  //   fetchTasks();
+  // }, [user?.email]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,6 +51,7 @@ export default function TaskManager() {
       .then((response) => {
         if (response.data.insertedId) {
           toast.success("Task added successfully!");
+          refetch()
         }
       })
       .catch((error) => {

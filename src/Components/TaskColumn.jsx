@@ -1,7 +1,20 @@
 /* eslint-disable react/prop-types */
 
-const TaskColumn = ({ title, tasks }) => {
+import axios from "axios";
+import UseTasks from "../Hooks/UseTasks";
 
+const TaskColumn = ({ title, tasks }) => {
+    const [refetch] = UseTasks()
+    const handleDelete =(id)=>{
+    console.log(id)
+        axios.delete(`http://localhost:5000/tasks/${id}`)
+        .then((response) => {
+            if(response.data.deletedCount > 0){
+                alert("Task Deleted")
+            }
+            refetch()
+          })
+    }
 
 
     return (
@@ -23,7 +36,7 @@ const TaskColumn = ({ title, tasks }) => {
                   </div>
                   {/* Delete Button */}
                   <button className="hover:text-blue-400">Edit</button>
-                  <button className="hover:text-red-500">Delete</button>
+                  <button onClick={()=> handleDelete(task._id)} className="hover:text-red-500">Delete</button>
                 </div>
               ))
             ) : (
