@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import TaskColumn from "./Components/TaskColumn";
 import UseTasks from "./Hooks/UseTasks";
+import { closestCorners, DndContext } from "@dnd-kit/core";
 
 export default function TaskManager() {
   const { user } = useContext(AuthContext);
@@ -11,24 +12,7 @@ export default function TaskManager() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("To-Do");
-  // const [tasks, setTasks] = useState([]);
   const [tasks, refetch]= UseTasks()
-
-
-  // useEffect(() => {
-  //   if (!user?.email) return;
-
-  //   const fetchTasks = async () => {
-  //     try {
-  //       const { data } = await axios.get(`http://localhost:5000/tasks/${user.email}`);
-  //       setTasks(data);
-  //     } catch (error) {
-  //       console.error("Error fetching tasks:", error);
-  //     }
-  //   };
-
-  //   fetchTasks();
-  // }, [user?.email]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -135,16 +119,13 @@ export default function TaskManager() {
       )}
 
    
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          {/* To-Do Column */}
-          <TaskColumn title="To-Do" tasks={getTasksByCategory("To-Do")} />
-
-          {/* In Progress Column */}
-          <TaskColumn title="In Progress" tasks={getTasksByCategory("In Progress")} />
-
-          {/* Done Column */}
-          <TaskColumn title="Done" tasks={getTasksByCategory("Done")} />
-        </div>
+<DndContext collisionDetection={closestCorners}>
+  <div className="grid grid-cols-3 gap-4 mt-4">
+    <TaskColumn title="To-Do" tasks={getTasksByCategory("To-Do")} />
+    <TaskColumn title="In Progress" tasks={getTasksByCategory("In Progress")} />
+    <TaskColumn title="Done" tasks={getTasksByCategory("Done")} />
+  </div>
+</DndContext>
     </div>
   );
 }
