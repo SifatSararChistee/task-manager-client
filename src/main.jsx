@@ -6,17 +6,20 @@ import { BrowserRouter,Routes, Route } from "react-router";
 import Login from './Components/Login.jsx';
 import { Toaster } from 'react-hot-toast';
 import AuthProvider from './Provider/AuthProvider.jsx';
+import {DndContext} from '@dnd-kit/core';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
       <BrowserRouter>
-      <AuthProvider>
+<DndContext>
+<AuthProvider>
       <Routes>
       <Route path="/app" element={<App />} />
       <Route path="/" element={<Login />} />
     </Routes>
     <Toaster />
       </AuthProvider>
+</DndContext>
   </BrowserRouter>
   </StrictMode>,
 )

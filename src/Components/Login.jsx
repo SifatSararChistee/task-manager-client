@@ -5,15 +5,14 @@ import { useNavigate } from "react-router";
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    const { logInWithGoogle, setLoading} =useContext(AuthContext)
+    const { setUser,logInWithGoogle, setLoading} =useContext(AuthContext)
     const navigate = useNavigate()
     const handleGoogleLogin=()=>{
         logInWithGoogle()
         .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user)
-            // setUser(user)
-            // setLoading(false)
+            setUser(user)
+            setLoading(false)
             toast.success("Login Successful")
             navigate( "/app")
         })

@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "./Context/AuthContext";
+import axios from "axios";
+import toast from "react-hot-toast";
+import TaskColumn from "./Components/TaskColumn";
 
 export default function TaskManager() {
+  const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("To-Do");
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const fetchTasks = async () => {
+      try {
+        const { data } = await axios.get(`http://localhost:5000/tasks/${user.email}`);
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, [user?.email]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,14 +36,23 @@ export default function TaskManager() {
     }
 
     const newTask = {
-      id: Date.now(), // Temporary unique ID
+      userEmail: user?.email,
       title,
       description,
       category,
       timestamp: new Date().toISOString(),
     };
 
-    console.log("Task Added:", newTask); // Replace with database call
+    axios
+      .post("http://localhost:5000/tasks", newTask)
+      .then((response) => {
+        if (response.data.insertedId) {
+          toast.success("Task added successfully!");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding post:", error);
+      });
 
     // Clear form & close modal
     setTitle("");
@@ -31,15 +61,18 @@ export default function TaskManager() {
     setIsOpen(false);
   };
 
+  const getTasksByCategory = (category) => tasks.filter((task) => task.category === category);
+
   return (
-    <div className="p-4">
-      {/* Add Task Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-      >
-        + Add Task
-      </button>
+    <div className="flex flex-col min-h-screen bg-gray-100 p-4">
+      {/* Header */}
+      <header className="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 className="text-xl font-bold">Task Manager</h1>
+        {/* Add Task Button */}
+        <button onClick={() => setIsOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+          + Add Task
+        </button>
+      </header>
 
       {/* Modal */}
       {isOpen && (
@@ -88,10 +121,7 @@ export default function TaskManager() {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg"
-                >
+                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg">
                   Add Task
                 </button>
               </div>
@@ -99,6 +129,20 @@ export default function TaskManager() {
           </div>
         </div>
       )}
+
+   
+        <div className="grid grid-cols-3 gap-4 mt-4">
+          {/* To-Do Column */}
+          <TaskColumn title="To-Do" tasks={getTasksByCategory("To-Do")} />
+
+          {/* In Progress Column */}
+          <TaskColumn title="In Progress" tasks={getTasksByCategory("In Progress")} />
+
+          {/* Done Column */}
+          <TaskColumn title="Done" tasks={getTasksByCategory("Done")} />
+        </div>
     </div>
   );
 }
+
+
