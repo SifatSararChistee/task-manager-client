@@ -13,14 +13,11 @@ export const TaskProvider = ({ children }) => {
     if (!user?.email) return;
 
     const fetchTasks = async () => {
-      try {
         const res = await axios.get(
-          `http://localhost:5000/tasks/${user.email}`
+          `https://task-manager-server-bice-one.vercel.app/tasks/${user.email}`
         );
         setTasks(res.data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
+  
     };
 
     fetchTasks();

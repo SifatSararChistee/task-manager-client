@@ -31,16 +31,13 @@ export default function TaskManager() {
       timestamp: new Date().toISOString(),
     };
 
-    try {
-      const response = await axios.post("http://localhost:5000/tasks", newTask);
+    
+      const response = await axios.post("https://task-manager-server-bice-one.vercel.app/tasks", newTask);
       if (response.data.insertedId) {
         toast.success("Task added successfully!");
         setTasks((prev) => [...prev, { ...newTask, _id: response.data.insertedId }]);
       }
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
-
+    
     setTitle("");
     setDescription("");
     setCategory("To-Do");
@@ -71,12 +68,7 @@ export default function TaskManager() {
 
     setTasks(reorderedTasks);
 
-    // Send reorder update to backend
-    // try {
-    //   await axios.put("http://localhost:5000/tasks/reorder", { tasks: reorderedTasks });
-    // } catch (error) {
-    //   console.error("Error updating task order:", error);
-    // }
+
   };
 
   const handleLogOut = () => {

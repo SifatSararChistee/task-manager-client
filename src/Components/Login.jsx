@@ -3,24 +3,29 @@ import { AuthContext } from "../Context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router";
 import toast from 'react-hot-toast';
+import axios from "axios";
 
 const Login = () => {
     const { setUser,logInWithGoogle, setLoading} =useContext(AuthContext)
     const navigate = useNavigate()
-    const handleGoogleLogin=()=>{
+      const handleGoogleLogin=()=>{
         logInWithGoogle()
         .then((userCredential) => {
-        const user = userCredential.user;
+          const user = userCredential.user;
             setUser(user)
+            const userInfo = {
+              name: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+          }           
+          axios.post('https://task-manager-server-bice-one.vercel.app/users', userInfo)
+          .then(() =>{
+            // console.log('user added to the database', res.data)
             setLoading(false)
-            toast.success("Login Successful")
-            navigate( "/app")
-        })
-        .catch((err) => {
-          setLoading(false)
-          toast.error(err.message)
-        });
-      }
+            navigate("/app")
+            toast.success("login successful")
+          })
+        })}
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

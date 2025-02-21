@@ -25,17 +25,13 @@ const Task = ({ id, title, description, category }) => {
 
     // Handle Delete
     const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(`http://localhost:5000/tasks/${id}`);
+        
+            const response = await axios.delete(`https://task-manager-server-bice-one.vercel.app/tasks/${id}`);
             if (response.data.deletedCount > 0) {
                 toast.success("Task Deleted");
                 // Update state by filtering out the deleted task
                 setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
             }
-        } catch (error) {
-            toast.error("Failed to delete task");
-            console.error("Error deleting task:", error);
-        }
     };
     
 
@@ -47,8 +43,8 @@ const Task = ({ id, title, description, category }) => {
     const handleUpdate = async (e) => {
         e.preventDefault();
     
-        try {
-            const response = await axios.put(`http://localhost:5000/tasks/${selectedTask.id}`, selectedTask);
+
+            const response = await axios.put(`https://task-manager-server-bice-one.vercel.app/tasks/${selectedTask.id}`, selectedTask);
             if (response.data.modifiedCount > 0) {
                 toast.success("Task Updated Successfully");
                 setIsModalOpen(false);
@@ -59,10 +55,7 @@ const Task = ({ id, title, description, category }) => {
                     )
                 );
             }
-        } catch (error) {
-            toast.error("Failed to update task");
-            console.error("Error updating task:", error);
-        }
+        
     };
     
 
@@ -70,7 +63,7 @@ const Task = ({ id, title, description, category }) => {
     const handleCompletion = async () => {
         
             const updatedTask = { ...selectedTask, category: "Done" };
-            const response = await axios.put(`http://localhost:5000/tasks/${id}`, updatedTask);
+            const response = await axios.put(`https://task-manager-server-bice-one.vercel.app/tasks/${id}`, updatedTask);
             if (response.data.modifiedCount > 0) {
                 toast.success("Task Marked as Done");
                 setTasks((prevTasks) => 
