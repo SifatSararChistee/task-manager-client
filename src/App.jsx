@@ -88,16 +88,35 @@ export default function TaskManager() {
       {/* Header */}
       <header className="bg-white shadow-md p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">Task Manager</h1>
+        <div>
         <button onClick={() => setIsOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">
           + Add Task
         </button>
-        
+        </div>
+
+        <div className="flex items-center">
+        <div className="mr-3 relative group">
+          <img
+            className="w-12 h-12 border-black border-2 rounded-full group-hover:opacity-75 transition-opacity duration-200"
+            src={user.photoURL}
+            alt=""
+            referrerPolicy="no-referrer"
+          />
+          <span
+            className="absolute top-1/2 left-[-150%] transform -translate-y-1/2 -translate-x-0 mt-2 px-2 py-1 text-base text-white bg-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            {user.displayName}
+          </span>
+        </div>
+
         <button
           onClick={handleLogOut}
           className="btn bg-blue-500 px-4 py-2 rounded-lg text-white transition-transform transform hover:scale-105"
         >
           Log Out
         </button>
+        </div>
+        
       </header>
 
       {/* Modal */}
@@ -132,7 +151,7 @@ export default function TaskManager() {
                 <button type="button" onClick={() => setIsOpen(false)} className="bg-gray-300 px-4 py-2 rounded-lg">
                   Cancel
                 </button>
-                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
                   Add Task
                 </button>
               </div>
@@ -143,7 +162,7 @@ export default function TaskManager() {
 
       {/* Drag & Drop Task Columns */}
       <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 gap-4 mt-4">
           <TaskColumn title="To-Do" tasks={getTasksByCategory("To-Do")} />
           <TaskColumn title="In Progress" tasks={getTasksByCategory("In Progress")} />
           <TaskColumn title="Done" tasks={getTasksByCategory("Done")} />
