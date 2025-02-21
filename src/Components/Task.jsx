@@ -1,84 +1,96 @@
 /* eslint-disable react/prop-types */
 
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import UseTasks from "../Hooks/UseTasks";
-// import { useSortable } from "@dnd-kit/sortable";
-// import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { TaskContext } from "../Context/TaskContext";
 
 const Task = ({ id, title, description, category }) => {
-    // const { attributes, listeners, setNodeRef, transform, transition } =
-    //     useSortable({ id });
+    const {setTasks} =useContext(TaskContext)
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id });
 
-    // const style = {
-    //     transition,
-    //     transform: transform ? CSS.Transform.toString(transform) : undefined,
-    // };
+    const style = {
+        transition,
+        transform: transform ? CSS.Transform.toString(transform) : undefined,
+    };
 
-    const [, refetch] = UseTasks();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState({ id, title, description, category });
 
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/tasks";
 
     // Handle Delete
     const handleDelete = async (id) => {
         try {
-            const response = await axios.delete(`${API_URL}/${id}`);
+            const response = await axios.delete(`http://localhost:5000/tasks/${id}`);
             if (response.data.deletedCount > 0) {
                 toast.success("Task Deleted");
-                refetch();
+                // Update state by filtering out the deleted task
+                setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
             }
         } catch (error) {
             toast.error("Failed to delete task");
             console.error("Error deleting task:", error);
         }
     };
+    
 
     // Handle Edit Click
     const handleEditClick = () => {
         setIsModalOpen(true);
     };
 
-    // Handle Update
     const handleUpdate = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await axios.put(`${API_URL}/${selectedTask.id}`, selectedTask);
+            const response = await axios.put(`http://localhost:5000/tasks/${selectedTask.id}`, selectedTask);
             if (response.data.modifiedCount > 0) {
                 toast.success("Task Updated Successfully");
                 setIsModalOpen(false);
-                refetch();
+                // Update the task in the state
+                setTasks((prevTasks) => 
+                    prevTasks.map((task) => 
+                        task._id === selectedTask.id ? { ...task, ...selectedTask } : task
+                    )
+                );
             }
         } catch (error) {
             toast.error("Failed to update task");
             console.error("Error updating task:", error);
         }
     };
+    
 
     // Handle Task Completion
     const handleCompletion = async () => {
         
             const updatedTask = { ...selectedTask, category: "Done" };
-            const response = await axios.put(`${API_URL}/${id}`, updatedTask);
+            const response = await axios.put(`http://localhost:5000/tasks/${id}`, updatedTask);
             if (response.data.modifiedCount > 0) {
                 toast.success("Task Marked as Done");
-                refetch();
+                setTasks((prevTasks) => 
+                    prevTasks.map((task) => 
+                        task._id === selectedTask.id ? { ...task, ...selectedTask } : task
+                    )
+                );
             }
         
     };
 
     return (
         <div
-            // ref={setNodeRef}
-            // style={style}
-            // {...attributes}
-            // {...listeners}
+            ref={setNodeRef}
+            style={style}
+
             className="bg-gray-200 p-3 rounded-lg shadow flex justify-between items-center"
         >
-            <div className="flex items-center space-x-2">
+            <div
+                        {...attributes}
+                        {...listeners}
+            className="flex items-center space-x-2">
                 <input
                     type="checkbox"
                     className="w-5 h-5"
