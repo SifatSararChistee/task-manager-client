@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import TaskColumn from "./Components/TaskColumn";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import { TaskContext } from "./Context/TaskContext";
+import Footer from "./Components/Footer";
 
 export default function TaskManager() {
   const { user, logOut, setUser } = useContext(AuthContext);
@@ -84,7 +85,7 @@ export default function TaskManager() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 p-4">
+    <div className="flex flex-col min-h-screen bg-gray-100 p-4 mx-auto max-w-screen">
       {/* Header */}
       <header className="bg-white shadow-md p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">Task Manager</h1>
@@ -168,6 +169,9 @@ export default function TaskManager() {
           <TaskColumn title="Done" tasks={getTasksByCategory("Done")} />
         </div>
       </DndContext>
+      <div className="bg-gray-100 mt-14">
+      <Footer></Footer>
+        </div>
     </div>
   );
 }
