@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TaskContext } from "../Context/TaskContext";
+import { LiaEdit } from "react-icons/lia";
+import { MdDelete } from "react-icons/md";
 
 const Task = ({ id, title, description, category }) => {
     const {setTasks} =useContext(TaskContext)
@@ -90,7 +92,7 @@ const Task = ({ id, title, description, category }) => {
             <div
                         {...attributes}
                         {...listeners}
-            className="flex items-center space-x-2">
+            className="flex items-center space-x-2 min-w-3/4">
                 <input
                     type="checkbox"
                     className="w-5 h-5"
@@ -102,8 +104,10 @@ const Task = ({ id, title, description, category }) => {
                     <p className="text-sm">{description}</p>
                 </div>
             </div>
-            <button onClick={handleEditClick} className="hover:text-blue-400">Edit</button>
-            <button onClick={() => handleDelete(id)} className="hover:text-red-500">Delete</button>
+            <div className="flex items-center gap-4 justify-center">   
+            <button onClick={handleEditClick} className="hover:text-blue-400 text-2xl"><LiaEdit /></button>
+            <button onClick={() => handleDelete(id)} className="hover:text-red-500 text-2xl"><MdDelete /></button>
+            </div>
 
             {/* Modal */}
             {isModalOpen && (

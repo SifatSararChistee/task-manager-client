@@ -97,7 +97,7 @@ export default function TaskManager() {
         <div className="flex items-center">
         <div className="mr-3 relative group">
           <img
-            className="w-12 h-12 border-black border-2 rounded-full group-hover:opacity-75 transition-opacity duration-200"
+            className="w-12 h-12 rounded-full group-hover:opacity-75 transition-opacity duration-200"
             src={user.photoURL}
             alt=""
             referrerPolicy="no-referrer"
