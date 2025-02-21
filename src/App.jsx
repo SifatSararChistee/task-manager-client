@@ -7,7 +7,7 @@ import { closestCorners, DndContext } from "@dnd-kit/core";
 import { TaskContext } from "./Context/TaskContext";
 
 export default function TaskManager() {
-  const { user } = useContext(AuthContext);
+  const { user, logOut, setUser } = useContext(AuthContext);
   const {tasks, setTasks} =useContext(TaskContext)
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -78,6 +78,11 @@ export default function TaskManager() {
     // }
   };
 
+  const handleLogOut = () => {
+    logOut();
+    setUser(null);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 p-4">
       {/* Header */}
@@ -85,6 +90,13 @@ export default function TaskManager() {
         <h1 className="text-xl font-bold">Task Manager</h1>
         <button onClick={() => setIsOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">
           + Add Task
+        </button>
+        
+        <button
+          onClick={handleLogOut}
+          className="btn bg-blue-500 px-4 py-2 rounded-lg text-white transition-transform transform hover:scale-105"
+        >
+          Log Out
         </button>
       </header>
 
