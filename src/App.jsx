@@ -45,31 +45,47 @@ export default function TaskManager() {
   };
 
   const getTasksByCategory = (category) => tasks.filter((task) => task.category === category);
-
   const onDragEnd = async (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = tasks.findIndex((task) => task._id === active.id);
-    const newIndex = tasks.findIndex((task) => task._id === over.id);
+    setTasks((prevTasks) => {
+        const oldIndex = prevTasks.findIndex((task) => task._id === active.id);
+        const newIndex = prevTasks.findIndex((task) => task._id === over.id);
+        
+        if (oldIndex === -1 || newIndex === -1) return prevTasks;
 
-    if (oldIndex === -1 || newIndex === -1) return;
+        // Reorder tasks locally
+        const updatedTasks = [...prevTasks];
+        const [movedTask] = updatedTasks.splice(oldIndex, 1);
+        updatedTasks.splice(newIndex, 0, movedTask);
 
-    // Reorder tasks locally
-    const updatedTasks = [...tasks];
-    const [movedTask] = updatedTasks.splice(oldIndex, 1);
-    updatedTasks.splice(newIndex, 0, movedTask);
+        // Update order property
+        const reorderedTasks = updatedTasks.map((task, index) => ({
+            ...task,
+            order: index,
+        }));
 
-    // Update order property for backend
-    const reorderedTasks = updatedTasks.map((task, index) => ({
-      ...task,
-      order: index,
-    }));
+        // Optimistic UI update
+        updateTaskOrderInDB(reorderedTasks).catch(() => {
+            setTasks(prevTasks); // If request fails, rollback
+        });
 
-    setTasks(reorderedTasks);
+        return reorderedTasks;
+    });
+};
+
+// Backend API call
+const updateTaskOrderInDB = async (tasks) => {
+  try {
+      await axios.post("http://localhost:5000/tasks/reorder", { tasks });
+  } catch (error) {
+      console.error("Failed to update task order:", error);
+      throw error; 
+  }
+};
 
 
-  };
 
   const handleLogOut = () => {
     logOut();
