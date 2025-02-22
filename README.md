@@ -1,5 +1,7 @@
 # Task Management Application
 
+## 📌 Short Description
+
 A modern, responsive Task Management Application with real-time updates, drag-and-drop functionality, and Firebase authentication.
 
 ## 🚀 Live Demo
@@ -15,7 +17,7 @@ A modern, responsive Task Management Application with real-time updates, drag-an
 │── README.md
 ```
 
-## 🛠 Technologies Used
+## 📦 Dependencies
 
 ### Frontend:
 
@@ -23,29 +25,27 @@ A modern, responsive Task Management Application with real-time updates, drag-an
 - Tailwind CSS & DaisyUI
 - DnD Kit (Drag and Drop)
 - Firebase Authentication
+- TanStack React Query
+- Axios
+- React Hot Toast
+- React Icons
+- React Router
 
 ### Backend:
 
 - Node.js + Express.js
 - MongoDB (with Change Streams for real-time updates)
 - WebSockets for instant syncing
-
-## 🔑 Features
-
-- Google Authentication (Firebase Auth)
-- Add, Edit, Delete, and Reorder Tasks
-- Drag and Drop between categories (To-Do, In Progress, Done)
-- Real-time Updates using MongoDB Change Streams & WebSockets
-- Optimistic UI Updates for a seamless experience
-- Fully responsive UI for both desktop & mobile
-- Clean, minimal design with a maximum of four colors
+- Node.js + Express.js
+- MongoDB (with Change Streams for real-time updates)
+- WebSockets for instant syncing
 
 ## 📌 Installation Steps
 
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/SifatSararChistee/task-manager-client.git
+git clone https://github.com/SifatSararChistee/task-manager-client
 cd task-management-app
 ```
 
@@ -65,6 +65,14 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 🛠 Technologies Used
+
+- React.js
+- Tailwind CSS & DaisyUI
+- Node.js & Express.js
+- MongoDB & WebSockets
+- Firebase Authentication
 
 ## 🔗 API Endpoints
 
