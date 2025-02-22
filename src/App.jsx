@@ -78,7 +78,7 @@ export default function TaskManager() {
 // Backend API call
 const updateTaskOrderInDB = async (tasks) => {
   try {
-      await axios.post("http://localhost:5000/tasks/reorder", { tasks });
+      await axios.post("https://task-manager-server-bice-one.vercel.app/tasks/reorder", { tasks });
   } catch (error) {
       console.error("Failed to update task order:", error);
       throw error; 
